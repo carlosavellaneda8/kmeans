@@ -15,13 +15,13 @@ def kMeans(b, k_clusters=2, tolerance=.00001, graph=True):
     # Define new centroids:
     df = pd.DataFrame({'x':b[:,0], 'y':b[:,1], 'label':labels})
     new_c = df.groupby('label').agg('mean')
-    while (np.sum((new_c[['x','y']].values - centroids)/centroids * 100.0) > tolerance):
+    while (np.sum(np.absolute(new_c[['x','y']].values - centroids)/centroids * 100.0) > tolerance):
         centroids = new_c[['x','y']].values
         c = distance_matrix(b, centroids)
         labels = np.argmin(c, axis=1)
         df = pd.DataFrame({'x':b[:,0], 'y':b[:,1], 'label':labels})
         new_c = df.groupby('label').agg('mean')
-        print(np.sum((new_c[['x','y']].values - centroids)/centroids * 100.0))
+        print(np.sum(np.absolute(new_c[['x','y']].values - centroids)/centroids * 100.0))
     if graph == True:
         plt.scatter(x=b[:,0], y=b[:,1], c=labels)
         plt.show()
